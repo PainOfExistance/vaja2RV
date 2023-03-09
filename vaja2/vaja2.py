@@ -18,12 +18,29 @@ def my_roberts(slika):
     alfa = float(input("vnestie alfa za kontrast:"))
     beta = float(input("vnestie beta za kontrast:"))
     slika_robov = spremeni_kontrast(slika_robov, alfa, beta)
-    # Display the results
-    cv2.imshow("Original Image", slika)
-    cv2.imshow("Roberts Edge Detection", slika_robov)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    return slika_robov
+    
+    # define range of white color in HSV
+    # change it according to your need !
+    lower_white = np.array([50], dtype=np.uint8)
+    upper_white = np.array([255], dtype=np.uint8)
+
+    # Threshold the HSV image to get only white colors
+    mask = cv2.inRange(slika_robov, lower_white, upper_white)
+    # Bitwise-AND mask and original image
+    dst = cv2.bitwise_and(slika_robov,slika_robov, mask= mask)
+
+    blank_image = np.zeros((slika.shape[0],slika.shape[1],3), np.uint8)
+    finslika = np.zeros((slika.shape[0],slika.shape[1],3), np.uint8)
+
+    for i in range(0, slika.shape[0]):
+        for j in range(0, slika.shape[1]):
+            blank_image[i,j]=[0, 0, slika_robov[i,j]]
+            finslika[i,j]=[slika[i,j], slika[i,j], slika[i,j]]
+           
+    blank_image = cv2.addWeighted(finslika, 0.4, blank_image, 1.5, 3)
+
+
+    return blank_image
 
 
 """
@@ -53,7 +70,11 @@ beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
 
 
-my_roberts(img)
+finimg=my_roberts(img)
+
+cv2.imshow("Edge Detection", finimg)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 """
 # Define the Roberts kernels
 rx = np.array([[1, 0], [0, -1]], dtype=np.float32)
