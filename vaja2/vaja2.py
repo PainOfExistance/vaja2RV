@@ -39,17 +39,25 @@ def my_roberts(slika):
 
 def my_prewitt(slika):
     # Define the Prewitt kernels
-    kernelx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]])
-    kernely = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]])
+    kx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]])
+    ky = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]])
 
     # Apply the Prewitt kernels to obtain the gradient images
-    prewittx = cv2.filter2D(slika, -1, kernelx)
-    prewitty = cv2.filter2D(slika, -1, kernely)
+    prewittx = cv2.filter2D(slika, -1, kx)
+    prewitty = cv2.filter2D(slika, -1, ky)
 
     # Combine the gradient images using the np.sqrt function to get the final Prewitt edge detection image
-    slika_robov = prewittx + prewitty
+    pewitt = prewittx + prewitty
+    slika_robov = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
+    finslika = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
 
-    # Display the result
+    for i in range(0, slika.shape[0]):
+        for j in range(0, slika.shape[1]):
+            slika_robov[i, j] = [0, 0, pewitt[i, j]]
+            finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
+
+    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
+
     cv2.imshow('Prewitt Edge Detection', slika_robov)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
@@ -78,6 +86,7 @@ img = cv2.resize(img, (800, 800))
 alfa = float(input("vnestie alfa za kontrast:"))
 beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
+choice = input("Vnestie tehnologijo 1.roberts 2.pewitt 3.sobel 4.cany")
 
 my_prewitt(img)
 finimg = my_roberts(img)
