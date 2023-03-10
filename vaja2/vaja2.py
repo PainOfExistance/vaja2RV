@@ -33,7 +33,7 @@ def my_roberts(slika):
             slika_robov[i, j] = [0, 0, dst[i, j]]
             finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
 
-    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.5, 3)
+    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
 
     return slika_robov
 
