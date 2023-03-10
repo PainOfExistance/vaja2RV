@@ -58,9 +58,6 @@ def my_prewitt(slika):
 
     slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
 
-    cv2.imshow('Prewitt Edge Detection', slika_robov)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
     return slika_robov 
 
 """
@@ -88,8 +85,15 @@ beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
 choice = input("Vnestie tehnologijo 1.roberts 2.pewitt 3.sobel 4.cany")
 
-my_prewitt(img)
-finimg = my_roberts(img)
+if choice=="1":
+    finimg = my_roberts(img)
+
+elif choice=="2":
+    finimg=my_prewitt(img)
+
+elif choice=="3":
+    print("todo sobel")
+
 
 cv2.imshow("Edge Detection", finimg)
 cv2.waitKey(0)
