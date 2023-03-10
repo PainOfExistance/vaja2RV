@@ -37,10 +37,10 @@ def my_roberts(slika):
 
     return slika_robov
 
-"""
 def my_prewitt(slika):
     return slika_robov 
 
+"""
 def my_sobel(slika):
     return slika_robov 
 
