@@ -38,6 +38,21 @@ def my_roberts(slika):
     return slika_robov
 
 def my_prewitt(slika):
+    # Define the Prewitt kernels
+    kernelx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]])
+    kernely = np.array([[1, 1, 1], [0, 0, 0], [-1, -1, -1]])
+
+    # Apply the Prewitt kernels to obtain the gradient images
+    prewittx = cv2.filter2D(slika, -1, kernelx)
+    prewitty = cv2.filter2D(slika, -1, kernely)
+
+    # Combine the gradient images using the np.sqrt function to get the final Prewitt edge detection image
+    slika_robov = prewittx + prewitty
+
+    # Display the result
+    cv2.imshow('Prewitt Edge Detection', slika_robov)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     return slika_robov 
 
 """
@@ -64,7 +79,7 @@ alfa = float(input("vnestie alfa za kontrast:"))
 beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
 
-
+my_prewitt(img)
 finimg = my_roberts(img)
 
 cv2.imshow("Edge Detection", finimg)
