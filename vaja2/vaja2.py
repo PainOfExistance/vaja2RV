@@ -6,6 +6,7 @@ def merge_images(slika, edgeSlika):
     slika = cv2.cvtColor(slika, cv2.COLOR_GRAY2BGR)
     slika_robov[:, :, 2] = edgeSlika
     slika_robov = cv2.addWeighted(slika, 0.4, slika_robov, 1.4, 3)
+
     return slika_robov
 
 def my_roberts(slika):
@@ -14,17 +15,10 @@ def my_roberts(slika):
     irx = cv2.filter2D(slika, -1, rx)
     iry = cv2.filter2D(slika, -1, ry)
 
-    robertsSlika = np.sqrt(np.square(irx) + np.square(iry))
-    robertsSlika = np.uint8(robertsSlika)
-    robertsSlika = spremeni_kontrast(robertsSlika, 9, 0)
+    robertsSlika = np.hypot(irx, iry)
+    robertsSlika = spremeni_kontrast(robertsSlika, 2, 0)
 
-    lower_white = np.array([30], dtype=np.uint8)
-    upper_white = np.array([255], dtype=np.uint8)
-    mask = cv2.inRange(robertsSlika, lower_white, upper_white)
-    filterRoberts = cv2.bitwise_and(robertsSlika, robertsSlika, mask=mask)
-
-    return merge_images(slika, filterRoberts)
-
+    return merge_images(slika, robertsSlika)
 
 def my_prewitt(slika):
     kx = np.array([[1, 0, -1], [1, 0, -1], [1, 0, -1]])
@@ -32,10 +26,9 @@ def my_prewitt(slika):
 
     prewittx = cv2.filter2D(slika, -1, kx)
     prewitty = cv2.filter2D(slika, -1, ky)
-    pewitt = np.abs(prewittx) + np.abs(prewitty)
+    pewitt = np.hypot(prewittx, prewitty)
 
     return merge_images(slika, pewitt)
-
 
 def my_sobel(slika):
     sxk = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
@@ -43,23 +36,17 @@ def my_sobel(slika):
 
     sobelx = cv2.filter2D(slika, -1, sxk)
     sobely = cv2.filter2D(slika, -1, syk)
-    sobel = np.abs(sobelx) + np.abs(sobely)
+    sobel = np.hypot(sobelx, sobely)
 
     return merge_images(slika, sobel)
-
 
 def canny(slika, sp_prag, zg_prag):
     canny = cv2.Canny(slika, sp_prag, zg_prag)
     return merge_images(slika, canny) 
 
-
 def spremeni_kontrast(slika, alfa, beta):
-    for i in range(0, slika.shape[0]):
-        for j in range(0, slika.shape[1]):
-            temp = alfa * slika[i, j] + beta
-            slika[i, j] = temp
-    return retSlika
-
+    slika = alfa * slika + beta
+    return np.clip(slika, 0, 255).astype(np.uint8)
 
 img = cv2.imread(
     "C:/Users/MatejPC/Desktop/Sola/2.letnik/4.semester/rv/vaja2/lenna.png", 0
@@ -86,10 +73,10 @@ while True:
         zg_prag = float(input("vnestie zgornji prag:"))
         finimg = canny(img, sp_prag, zg_prag)
 
-    cv2.imshow("Edge Detection", finimg)
+    cv2.imshow("Edge Detection", finimg);
     cv2.waitKey(0);
     cv2.destroyAllWindows();
 
-    izb = input("Želite preiskusiti drug način iskanja robov? y/n")
+    izb = input("Želite preiskusiti drug način iskanja robov? y/n");
     if izb=="n":
-        break
+        break;
