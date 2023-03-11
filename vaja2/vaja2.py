@@ -16,7 +16,7 @@ def my_roberts(slika):
     iry = cv2.filter2D(slika, -1, ry)
 
     robertsSlika = np.hypot(irx, iry)
-    robertsSlika = spremeni_kontrast(robertsSlika, 2, 0)
+    robertsSlika = spremeni_kontrast(robertsSlika, 3, 0)
 
     return merge_images(slika, robertsSlika)
 
