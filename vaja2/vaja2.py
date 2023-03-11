@@ -3,14 +3,9 @@ import numpy as np
 
 def merge_images(slika, edgeSlika):
     slika_robov = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
-    finslika = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
-
-    for i in range(0, slika.shape[0]):
-        for j in range(0, slika.shape[1]):
-            slika_robov[i, j] = [0, 0, edgeSlika[i, j]]
-            finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
-
-    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
+    slika = cv2.cvtColor(slika, cv2.COLOR_GRAY2BGR)
+    slika_robov[:, :, 2] = edgeSlika
+    slika_robov = cv2.addWeighted(slika, 0.4, slika_robov, 1.4, 3)
     return slika_robov
 
 def my_roberts(slika):
@@ -62,6 +57,7 @@ def canny(slika, sp_prag, zg_prag):
 
 
 def spremeni_kontrast(slika, alfa, beta):
+    ^#slika=alfa * slika + beta
     for i in range(0, slika.shape[0]):
         for j in range(0, slika.shape[1]):
             temp = alfa * slika[i, j] + beta
