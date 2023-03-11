@@ -1,10 +1,21 @@
 ﻿import cv2
 import numpy as np
 
+def merge_images(slika, edgeSlika):
+    slika_robov = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
+    finslika = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
+
+    for i in range(0, slika.shape[0]):
+        for j in range(0, slika.shape[1]):
+            slika_robov[i, j] = [0, 0, edgeSlika[i, j]]
+            finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
+
+    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
+    return slika_robov
 
 def my_roberts(slika):
-    rx = np.array([[1, 0], [0, -1]], dtype=np.float32)
-    ry = np.array([[0, 1], [-1, 0]], dtype=np.float32)
+    rx = np.array([[1, 0], [0, -1]])
+    ry = np.array([[0, 1], [-1, 0]])
 
     irx = cv2.filter2D(slika, -1, rx)
     iry = cv2.filter2D(slika, -1, ry)
@@ -18,19 +29,9 @@ def my_roberts(slika):
     upper_white = np.array([255], dtype=np.uint8)
 
     mask = cv2.inRange(robertsSlika, lower_white, upper_white)
-    dst = cv2.bitwise_and(robertsSlika, robertsSlika, mask=mask)
+    filterRoberts = cv2.bitwise_and(robertsSlika, robertsSlika, mask=mask)
 
-    slika_robov = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
-    finslika = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
-
-    for i in range(0, slika.shape[0]):
-        for j in range(0, slika.shape[1]):
-            slika_robov[i, j] = [0, 0, dst[i, j]]
-            finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
-
-    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
-
-    return slika_robov
+    return merge_images(slika, filterRoberts)
 
 
 def my_prewitt(slika):
@@ -39,43 +40,25 @@ def my_prewitt(slika):
 
     prewittx = cv2.filter2D(slika, -1, kx)
     prewitty = cv2.filter2D(slika, -1, ky)
-
     pewitt = np.abs(prewittx) + np.abs(prewitty)
-    slika_robov = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
-    finslika = np.zeros((slika.shape[0], slika.shape[1], 3), np.uint8)
 
-    for i in range(0, slika.shape[0]):
-        for j in range(0, slika.shape[1]):
-            slika_robov[i, j] = [0, 0, pewitt[i, j]]
-            finslika[i, j] = [slika[i, j], slika[i, j], slika[i, j]]
-
-    slika_robov = cv2.addWeighted(finslika, 0.4, slika_robov, 1.4, 3)
-
-    return slika_robov
+    return merge_images(slika, pewitt)
 
 
 def my_sobel(slika):
     sxk = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
     syk = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
 
-    # Apply the Sobel kernels to the image
     sobelx = cv2.filter2D(slika, -1, sxk)
     sobely = cv2.filter2D(slika, -1, syk)
-
-    # Compute the magnitude of the gradient
     sobel = np.abs(sobelx) + np.abs(sobely)
-    cv2.imshow("Sobel edge detection", sobel)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    return 0
-    return slika_robov
+
+    return merge_images(slika, sobel)
 
 
-"""
 def canny(slika, sp_prag, zg_prag):
-    return slika_robov 
-
-"""
+    canny = cv2.Canny(slika, sp_prag, zg_prag)
+    return merge_images(slika, canny) 
 
 
 def spremeni_kontrast(slika, alfa, beta):
@@ -103,6 +86,11 @@ elif choice == "2":
 
 elif choice == "3":
     finimg = my_sobel(img)
+
+elif choice == "4":
+    sp_prag = float(input("vnesite spodnji prag:"))
+    zg_prag = float(input("vnestie zgornji prag:"))
+    finimg = canny(img, sp_prag, zg_prag)
 
 
 cv2.imshow("Edge Detection", finimg)
