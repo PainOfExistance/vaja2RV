@@ -55,10 +55,23 @@ def my_prewitt(slika):
 
     return slika_robov 
 
-"""
 def my_sobel(slika):
+    sobelx_kernel = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
+    sobely_kernel = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
+
+    # Apply the Sobel kernels to the image
+    sobelx = cv2.filter2D(gray, -1, sobelx_kernel)
+    sobely = cv2.filter2D(gray, -1, sobely_kernel)
+
+    # Compute the magnitude of the gradient
+    sobel = np.sqrt(sobelx ** 2 + sobely ** 2)
+    cv2.imshow("Sobel edge detection", sobel)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    return 0
     return slika_robov 
 
+"""
 def canny(slika, sp_prag, zg_prag):
     return slika_robov 
 
