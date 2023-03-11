@@ -76,23 +76,27 @@ img = cv2.resize(img, (800, 800))
 alfa = float(input("vnestie alfa za kontrast:"))
 beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
-choice = input("Vnestie tehnologijo 1.roberts 2.prewitt 3.sobel 4.cany")
+while True:
+    choice = input("Vnestie tehnologijo 1.roberts 2.prewitt 3.sobel 4.cany")
 
-if choice == "1":
-    finimg = my_roberts(img)
+    if choice == "1":
+        finimg = my_roberts(img)
 
-elif choice == "2":
-    finimg = my_prewitt(img)
+    elif choice == "2":
+        finimg = my_prewitt(img)
 
-elif choice == "3":
-    finimg = my_sobel(img)
+    elif choice == "3":
+        finimg = my_sobel(img)
 
-elif choice == "4":
-    sp_prag = float(input("vnesite spodnji prag:"))
-    zg_prag = float(input("vnestie zgornji prag:"))
-    finimg = canny(img, sp_prag, zg_prag)
+    elif choice == "4":
+        sp_prag = float(input("vnesite spodnji prag:"))
+        zg_prag = float(input("vnestie zgornji prag:"))
+        finimg = canny(img, sp_prag, zg_prag)
 
+    cv2.imshow("Edge Detection", finimg)
+    cv2.waitKey(0);
+    cv2.destroyAllWindows();
 
-cv2.imshow("Edge Detection", finimg)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    izb = input("Želite preiskusiti drug način iskanja robov? y/n")
+    if izb=="n":
+        break
