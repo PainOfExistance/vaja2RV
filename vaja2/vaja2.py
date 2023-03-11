@@ -11,18 +11,15 @@ def merge_images(slika, edgeSlika):
 def my_roberts(slika):
     rx = np.array([[1, 0], [0, -1]])
     ry = np.array([[0, 1], [-1, 0]])
-
     irx = cv2.filter2D(slika, -1, rx)
     iry = cv2.filter2D(slika, -1, ry)
 
     robertsSlika = np.sqrt(np.square(irx) + np.square(iry))
     robertsSlika = np.uint8(robertsSlika)
-
     robertsSlika = spremeni_kontrast(robertsSlika, 9, 0)
 
     lower_white = np.array([30], dtype=np.uint8)
     upper_white = np.array([255], dtype=np.uint8)
-
     mask = cv2.inRange(robertsSlika, lower_white, upper_white)
     filterRoberts = cv2.bitwise_and(robertsSlika, robertsSlika, mask=mask)
 
@@ -57,12 +54,11 @@ def canny(slika, sp_prag, zg_prag):
 
 
 def spremeni_kontrast(slika, alfa, beta):
-    ^#slika=alfa * slika + beta
     for i in range(0, slika.shape[0]):
         for j in range(0, slika.shape[1]):
             temp = alfa * slika[i, j] + beta
             slika[i, j] = temp
-    return slika
+    return retSlika
 
 
 img = cv2.imread(
@@ -72,6 +68,7 @@ img = cv2.resize(img, (800, 800))
 alfa = float(input("vnestie alfa za kontrast:"))
 beta = float(input("vnestie beta za kontrast:"))
 img = spremeni_kontrast(img, alfa, beta)
+
 while True:
     choice = input("Vnestie tehnologijo 1.roberts 2.prewitt 3.sobel 4.cany")
 
