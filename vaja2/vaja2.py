@@ -14,10 +14,6 @@ def my_roberts(slika):
     robertsSlika = np.sqrt(np.square(irx) + np.square(iry))
     robertsSlika = np.uint8(robertsSlika)
 
-    alfa = float(input("vnestie alfa za kontrast:"))
-    beta = float(input("vnestie beta za kontrast:"))
-    robertsSlika = spremeni_kontrast(robertsSlika, alfa, beta)
-
     lower_white = np.array([30], dtype=np.uint8)
     upper_white = np.array([255], dtype=np.uint8)
 
